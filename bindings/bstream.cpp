@@ -15,6 +15,7 @@
 namespace py = pybind11;
 
 inline py::bytes to_pybytes(std::string_view sv) { return py::bytes(sv.data(), sv.size()); }
+
 inline py::bytes to_pybytes(std::string const& s) { return py::bytes(s); }
 
 PYBIND11_MODULE(_bstream, m) {
@@ -58,6 +59,7 @@ Args:
             [](bstream::ReadOnlyBinaryStream& self) -> py::bytes { return to_pybytes(self.copyData()); },
             "Get a copy of the entire buffer"
         )
+
         .def("get_byte", &bstream::ReadOnlyBinaryStream::getUnsignedChar, "Read unsigned char")
         .def("get_unsigned_char", &bstream::ReadOnlyBinaryStream::getUnsignedChar, "Read unsigned char")
         .def("get_unsigned_short", &bstream::ReadOnlyBinaryStream::getUnsignedShort, "Read unsigned short")
@@ -91,6 +93,26 @@ Args:
             "Read a string"
         )
         .def(
+            "get_short_bytes",
+            [](bstream::ReadOnlyBinaryStream& self) -> py::bytes { return to_pybytes(self.getShortString()); },
+            "Read a bytes"
+        )
+        .def(
+            "get_short_string",
+            [](bstream::ReadOnlyBinaryStream& self) -> std::string { return self.getShortString(); },
+            "Read a string"
+        )
+        .def(
+            "get_long_bytes",
+            [](bstream::ReadOnlyBinaryStream& self) -> py::bytes { return to_pybytes(self.getLongString()); },
+            "Read a bytes"
+        )
+        .def(
+            "get_long_string",
+            [](bstream::ReadOnlyBinaryStream& self) -> std::string { return self.getLongString(); },
+            "Read a string"
+        )
+        .def(
             "get_raw_bytes",
             [](bstream::ReadOnlyBinaryStream& self, size_t length) -> py::bytes {
                 return to_pybytes(self.getRawBytes(length));
@@ -98,6 +120,7 @@ Args:
             py::arg("length"),
             "Read raw bytes of specified length"
         )
+
         .def("__eq__", &bstream::ReadOnlyBinaryStream::operator==, py::arg("other"))
         .def("__len__", &bstream::ReadOnlyBinaryStream::size)
         .def("__repr__", [](bstream::ReadOnlyBinaryStream const& self) {
@@ -152,6 +175,7 @@ Args:
             [](bstream::BinaryStream& self) -> py::bytes { return to_pybytes(self.getAndReleaseData()); },
             "Get and release internal data buffer"
         )
+
         .def("write_byte", &bstream::BinaryStream::writeUnsignedChar, py::arg("value"), "Write unsigned char")
         .def("write_unsigned_char", &bstream::BinaryStream::writeUnsignedChar, py::arg("value"), "Write unsigned char")
         .def(
@@ -206,6 +230,31 @@ Args:
             "write unsigned int24"
         )
         .def(
+            "write_short_bytes",
+            [](bstream::BinaryStream& self, py::buffer value) {
+                py::buffer_info info = value.request();
+                self.writeShortString(std::string_view(static_cast<const char*>(info.ptr), info.size));
+            },
+            py::arg("value"),
+            "Write a short bytes"
+        )
+        .def(
+            "write_short_string",
+            &bstream::BinaryStream::writeShortString,
+            py::arg("value"),
+            "Write a short text string"
+        )
+        .def(
+            "write_long_bytes",
+            [](bstream::BinaryStream& self, py::buffer value) {
+                py::buffer_info info = value.request();
+                self.writeLongString(std::string_view(static_cast<const char*>(info.ptr), info.size));
+            },
+            py::arg("value"),
+            "Write a long bytes"
+        )
+        .def("write_long_string", &bstream::BinaryStream::writeLongString, py::arg("value"), "Write a long string")
+        .def(
             "write_bytes",
             [](bstream::BinaryStream& self, py::buffer value) {
                 py::buffer_info info = value.request();
@@ -237,12 +286,14 @@ Args:
             py::arg("size"),
             "Write raw bytes with specified length"
         )
+
         .def(
             "write_stream",
             [](bstream::BinaryStream& self, bstream::ReadOnlyBinaryStream& stream) { self.writeStream(stream); },
             py::arg("stream"),
             "Write content from another stream"
         )
+
         .def("__repr__", [](const bstream::BinaryStream& self) {
             return std::format("<BinaryStream size={0}, position={1}>", self.size(), self.getPosition());
         });
