@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=65.0", "wheel", "xmake"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bstream"
+version = "1.0.0"
+authors = [{ name = "GlacieTeam" }]
+description = "Python bindings for bstream library"
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "MPL-2.0" }
+classifiers = [
+    "License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: C++",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: MacOS :: MacOS X",
+]
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/GlacieTeam/bstream"
+
+
+[tool.setuptools]
+include-package-data = true
+packages = ["bstream"]
+
+[tool.setuptools.package-data]
+bstream = ["*.pyd", "*.so"]
