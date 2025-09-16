@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=65.0", "wheel", "xmake"]
+requires = ["setuptools>=65.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -26,15 +26,26 @@ Homepage = "https://github.com/GlacieTeam/bstream"
 
 [tool.setuptools]
 include-package-data = true
-packages = ["bstream"]
+packages = { find = {} }
 
 [tool.setuptools.package-data]
-bstream = ["*.pyd", "*.so", "*.lib "]
+bstream = ["*.pyd", "*.so"]
 
 [tool.cibuildwheel]
 build = "cp38-* cp39-* cp310-* cp311-* cp312-* cp313-*"
-manylinux-x86_64-image = "manylinux2014"
-manylinux-i686-image = "manylinux2014"
-manylinux-aarch64-image = "manylinux2014"
-manylinux-ppc64le-image = "manylinux2014"
-manylinux-s390x-image = "manylinux2014"
+manylinux-x86_64-image = "manylinux_2_28"
+manylinux-aarch64-image = "manylinux_2_28"
+
+[tool.cibuildwheel.linux]
+before-all = [
+    "ln -sf $(which python3) /usr/local/bin/python3",
+    "/usr/local/bin/python3 --version",
+    "yum install -y epel-release",
+    "yum config-manager --set-enabled powertools",
+    "yum install -y gcc-toolset-13 ninja-build cmake openssl",
+    "source /opt/rh/gcc-toolset-13/enable",
+    "ln -sf /opt/rh/gcc-toolset-13/root/usr/bin/gcc /usr/bin/gcc",
+    "ln -sf /opt/rh/gcc-toolset-13/root/usr/bin/g++ /usr/bin/g++",
+    "curl -fsSL https://xmake.io/shget.text | bash",
+    "ln -s ~/.local/bin/xmake /usr/local/bin/xmake",
+]

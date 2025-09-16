@@ -28,7 +28,7 @@ PYBIND11_MODULE(_bstream, m) {
                 const char*     data = static_cast<const char*>(info.ptr);
                 size_t          size = info.size;
                 if (!copy_buffer && PyBytes_Check(buf.ptr())) { copy_buffer = true; }
-                return new bstream::ReadOnlyBinaryStream(data, size, copy_buffer, big_endian);
+                return std::make_unique<bstream::ReadOnlyBinaryStream>(data, size, copy_buffer, big_endian);
             }),
             py::arg("buffer"),
             py::arg("copy_buffer") = false,
@@ -145,7 +145,7 @@ Args:
                 const char*     data   = static_cast<const char*>(info.ptr);
                 size_t          size   = static_cast<size_t>(info.size);
                 std::string     buffer = std::string(data, size);
-                return new bstream::BinaryStream(buffer, true, big_endian);
+                return std::make_unique<bstream::BinaryStream>(buffer, true, big_endian);
             }),
             py::arg("buffer"),
             py::arg("big_endian") = false,
