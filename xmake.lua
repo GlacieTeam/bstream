@@ -4,7 +4,8 @@ add_repositories("groupmountain-repo https://github.com/GroupMountain/xmake-repo
 
 add_requires(
     "binarystream 2.3.2",
-    "pybind11-cibw 3.0.1"
+    "pybind11-header 3.0.1",
+    "xmake-scripts 1.0.0"
 )
 
 if is_plat("windows") and not has_config("vs_runtime") then
@@ -18,23 +19,10 @@ target("_bstream")
     set_prefixname("")
     set_extension("")
     add_packages(
-        "pybind11-cibw",
+        "pybind11-header",
         "binarystream"
     )
-    add_defines("PYBIND11_PYTHON_VERSION=0x03080000")
-    on_load(function (target)
-        local include = os.iorun("python -c \"import sysconfig; print(sysconfig.get_path('include'))\""):sub(1, -2)
-        local lib = os.iorun("python -c \"import sysconfig; print(sysconfig.get_config_var('LIBDIR') or sysconfig.get_config_var('LIBPL'))\""):sub(1, -2)
-        if is_plat("windows") then 
-            lib = os.iorun("python -c \"import sysconfig; print(sysconfig.get_config_var('installed_base') + '\\libs')\""):sub(1, -2)
-        end
-        local version = os.iorun("python --version"):sub(1, -2)
-        target:add("includedirs", include)
-        target:add("linkdirs", lib)
-        cprint("${bright green}[Python]:${reset} include: " .. include)
-        cprint("${bright green}[Python]:${reset} lib: " .. lib)
-        cprint("${bright green}[Python]:${reset} version: " .. version)
-    end)
+    add_rules("@xmake-scripts/python")
     add_files("bindings/**.cpp")
     if is_plat("windows") then
         add_defines(
