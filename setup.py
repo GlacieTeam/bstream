@@ -1,8 +1,9 @@
-import subprocess, os, shutil
-from setuptools import setup, Distribution, find_packages
+import os
+import shutil
+import subprocess
+from setuptools import Distribution, setup
 from setuptools.command.build_ext import build_ext
 from setuptools.command.build_py import build_py
-
 
 PACKAGE_NAME = "bstream"
 EXTENSION_FILENAME = "_bstream"
@@ -36,22 +37,16 @@ class XmakeDistribution(Distribution):
         return True
 
 
-class InstallCommand(build_py):
+class XmakeCommand(build_py):
     def run(self):
         self.run_command("build_ext")
         super().run()
 
 
 setup(
-    name=f"{PACKAGE_NAME}",
-    version="1.0.0",
-    packages=find_packages(),
-    include_package_data=True,
-    package_data={f"{PACKAGE_NAME}": ["*.so", "*.pyd"]},
     cmdclass={
         "build_ext": XMakeBuild,
-        "build_py": InstallCommand,
+        "build_py": XmakeCommand,
     },
     distclass=XmakeDistribution,
-    zip_safe=False,
 )

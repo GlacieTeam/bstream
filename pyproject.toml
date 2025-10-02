@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "bstream"
-version = "1.0.0"
+version = "1.1.0"
 authors = [{ name = "GlacieTeam" }]
 description = "Python bindings for bstream library"
 readme = "README.md"
@@ -12,7 +12,15 @@ requires-python = ">=3.8"
 license = { text = "MPL-2.0" }
 classifiers = [
     "License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)",
+    "Programming Language :: Python",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Programming Language :: C++",
     "Operating System :: Microsoft :: Windows",
     "Operating System :: POSIX :: Linux",
@@ -32,7 +40,7 @@ packages = { find = {} }
 bstream = ["*.pyd", "*.so"]
 
 [tool.cibuildwheel]
-build = "cp38-* cp39-* cp310-* cp311-* cp312-* cp313-*"
+build = "cp38-* cp39-* cp310-* cp311-* cp312-* cp313-* cp314-*"
 manylinux-x86_64-image = "manylinux_2_28"
 manylinux-aarch64-image = "manylinux_2_28"
 
