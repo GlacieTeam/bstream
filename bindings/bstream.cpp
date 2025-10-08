@@ -133,11 +133,11 @@ Args:
             py::init<bool>(),
             py::arg("big_endian") = false,
             R"doc(
-Create a new empty BinaryStream
+            Create a new empty BinaryStream
              
-Args:
-    big_endian: Endianness for writing numbers
-)doc"
+            Args:
+                big_endian: Endianness for writing numbers
+            )doc"
         )
         .def(
             py::init([](py::buffer buf, bool big_endian) {
@@ -150,13 +150,13 @@ Args:
             py::arg("buffer"),
             py::arg("big_endian") = false,
             R"doc(
-    Construct from a buffer (bytes or bytearray)
+            Construct from a buffer (bytes or bytearray)
     
-    Args:
-        buffer: Binary data as bytes or bytearray
-        copy_buffer: If True, copy the data
-        big_endian: Endianness for writing numbers
-    )doc"
+            Args:
+                buffer: Binary data as bytes or bytearray
+                copy_buffer: If True, copy the data
+                big_endian: Endianness for writing numbers
+            )doc"
         )
         .def("reserve", &bstream::BinaryStream::reserve, py::arg("size"), "Reserve internal buffer size")
         .def("reset", &bstream::BinaryStream::reset, "Reset stream to initial state")
